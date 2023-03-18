@@ -25,8 +25,9 @@ OCR Aplikacja to profesjonalne i minimalistyczne narzędzie rozpoznawania tekstu
 ## Instalacja
 
 1. Sklonuj to repozytorium na swoje lokalne środowisko.
+```
 git clone https://github.com/Jacob22092/OCR-App
-
+```
 2. Otwórz plik `index.html` w przeglądarce internetowej.
 
 ## Technologie użyte
@@ -67,7 +68,9 @@ The OCR Application is a professional and minimalist Optical Character Recogniti
 ## Installation
 
 1. Clone this repository to your local environment.
+```
 git clone https://github.com/Jacob22092/OCR-App
+```
 2. Open the `index.html` file in your web browser.
 
 ## Technologies Used
