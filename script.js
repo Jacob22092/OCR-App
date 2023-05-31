@@ -4,35 +4,30 @@ document.addEventListener("DOMContentLoaded", () => {
   const submitButton = document.getElementById("submit");
   const languageSelect = document.getElementById("language");
   const outputTextArea = document.getElementById("output");
+  const darkmodeToggle = document.getElementById("darkmode-toggle");
+  const body = document.body;
+  const container = document.querySelector(".container");
 
   fileUpload.addEventListener("change", () => {
-    if (fileUpload.files.length > 0) {
-      fileUploadLabelText.textContent = fileUpload.files[0].name;
-    } else {
-      fileUploadLabelText.textContent = "Załącz plik";
-    }
+    fileUploadLabelText.innerText = fileUpload.files[0].name;
   });
 
-  submitButton.addEventListener("click", async () => {
-    if (fileUpload.files.length === 0) {
-      alert("Proszę wybrać plik do przetworzenia.");
-      return;
-    }
-
-    const file = fileUpload.files[0];
-    const language = languageSelect.value;
-
-    try {
-      submitButton.disabled = true;
-      outputTextArea.value = "Przetwarzanie...";
-
-      const result = await Tesseract.recognize(file, language);
-      outputTextArea.value = result.data.text;
-    } catch (error) {
-      alert("Błąd przetwarzania obrazu: " + error.message);
-      outputTextArea.value = "";
-    } finally {
-      submitButton.disabled = false;
-    }
+  submitButton.addEventListener("click", () => {
+    performOCR(fileUpload.files[0]);
   });
+
+  darkmodeToggle.addEventListener("change", () => {
+    body.classList.toggle("darkmode");
+    container.classList.toggle("darkmode");
+  });
+
+  const performOCR = (imageFile) => {
+    Tesseract.recognize(
+      imageFile,
+      languageSelect.value,
+      { logger: m => console.log(m) }
+    ).then(({ data: { text } }) => {
+      outputTextArea.value = text;
+    });
+  };
 });
