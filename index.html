@@ -10,13 +10,24 @@
   <script src="script.js" defer></script>
 </head>
 <body>
+  <div class="darkmode-switch">
+    <span id="sun">&#9728;</span>
+    <label class="switch">
+      <input type="checkbox" id="darkmode-toggle">
+      <span class="slider round"></span>
+    </label>
+    <span id="moon">&#9790;</span>
+  </div>
   <div class="container">
     <h1>OCR Aplikacja</h1>
     <div class="upload-section">
       <select id="language">
         <option value="pol">Polski</option>
         <option value="eng">Angielski</option>
-        <!-- Dodaj więcej języków tutaj -->
+        <option value="ger">Niemiecki</option>
+        <option value="fra">Francuski</option>
+        <option value="ita">Włoski</option>
+        <option value="spa">Hiszpański</option>
       </select>
       <label for="file-upload" class="custom-file-upload">
         <span class="label-text">Załącz plik</span>
