@@ -45,7 +45,6 @@ This project is covered under the MIT License. More information can be found in 
 # OCR Aplikacja [PL]
 
 OCR Aplikacja to profesjonalne i minimalistyczne narzędzie rozpoznawania tekstu (OCR), które umożliwia konwersję obrazów na tekst przy użyciu przeglądarki internetowej. Aplikacja pozwala użytkownikom wybrać język dla lepszego rozpoznawania tekstu oraz załadować obraz z tekstem, który ma zostać przekonwertowany. Po przetworzeniu obrazu wynikowy tekst jest wyświetlany w polu tekstowym, gotowy do skopiowania.
-![img](https://cdn.discordapp.com/attachments/838519186950586398/1086697734729383998/image.png)
 ## Funkcje
 
 - Obsługa różnych języków
