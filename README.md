@@ -1,13 +1,14 @@
 # OCR Application [EN]
 
 The OCR Application is a professional and minimalist Optical Character Recognition (OCR) tool that allows you to convert images to text using a web browser. The application enables users to choose a language for better text recognition and upload an image with the text to be converted. After processing the image, the resulting text is displayed in a text field, ready to be copied.
-![img](https://cdn.discordapp.com/attachments/838519186950586398/1086697798323425402/image.png)
+![img](https://cdn.discordapp.com/attachments/838519186950586398/1114574040384950413/1.png)
 ## Features
 
 - Support for multiple languages
 - Minimalistic and professional interface
 - Easy file attachment
 - Optimization for various devices and browsers
+- Darkmode
 
 ## How to Use
 
@@ -51,6 +52,7 @@ OCR Aplikacja to profesjonalne i minimalistyczne narzędzie rozpoznawania tekstu
 - Minimalistyczny i profesjonalny interfejs
 - Łatwe załączanie plików
 - Optymalizacja na różnych urządzeniach i przeglądarkach
+- Tryb ciemny
 
 ## Jak używać
 
