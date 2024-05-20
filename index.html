@@ -3,164 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OCR - Konwertuj Obraz na Tekst</title>
-  <meta name="description" content="OCR - Konwertuj Obraz na Tekst. Przeciągnij obraz, aby automatycznie rozpoznać tekst w wielu językach.">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
+  <title>OCR Aplikacja</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js"></script>
+  <script src="script.js" defer></script>
 </head>
 <body>
-  <div class="content">
-    <div class="container">
-      <h1 data-lang="pl">OCR - Konwertuj Obraz na Tekst</h1>
-      <h1 data-lang="en" style="display: none;">OCR - Convert Image to Text</h1>
-      <div class="ocr-container">
-        <textarea id="ocr-text" readonly placeholder="Tutaj pojawi się rozpoznany tekst..."></textarea>
-        <div id="progress-bar" class="progress-bar"></div>
-        <div class="ocr-buttons">
-          <button id="ocr-reset" class="btn"><i class="fas fa-redo"></i> <span data-lang="pl">Reset</span><span data-lang="en" style="display: none;">Reset</span></button>
-          <button id="ocr-copy" class="btn"><i class="fas fa-copy"></i> <span data-lang="pl">Kopiuj</span><span data-lang="en" style="display: none;">Copy</span></button>
-        </div>
-        <input type="file" id="ocr-upload" style="display: none;">
-        <div id="drop-area">
-          <p data-lang="pl">Przeciągnij tutaj obraz z tekstem lub</p>
-          <p data-lang="en" style="display: none;">Drag an image here or</p>
-          <button class="btn" id="upload-btn"><span data-lang="pl">Wybierz plik</span><span data-lang="en" style="display: none;">Choose File</span></button>
-        </div>
-        <div class="options">
-          <label for="ocr-lang" data-lang="pl">Wybierz język:</label>
-          <label for="ocr-lang" data-lang="en" style="display: none;">Choose Language:</label>
-          <select id="ocr-lang">
-            <option value="pol" data-lang="pl">Polski</option>
-            <option value="eng" data-lang="en">English</option>
-            <option value="pol+eng">Polski + English</option>
-            <!-- Dodaj inne języki w razie potrzeby -->
-          </select>
-        </div>
-      </div>
+  <div class="darkmode-switch">
+    <span id="sun">&#9728;</span>
+    <label class="switch">
+      <input type="checkbox" id="darkmode-toggle">
+      <span class="slider round"></span>
+    </label>
+    <span id="moon">&#9790;</span>
+  </div>
+  <div class="container">
+    <h1>OCR Aplikacja</h1>
+    <div class="upload-section">
+      <select id="language">
+        <option value="pol">Polski</option>
+        <option value="eng">Angielski</option>
+        <option value="ger">Niemiecki</option>
+        <option value="fra">Francuski</option>
+        <option value="ita">Włoski</option>
+        <option value="spa">Hiszpański</option>
+      </select>
+      <label for="file-upload" class="custom-file-upload">
+        <span class="label-text">Załącz plik</span>
+      </label>
+      <input type="file" id="file-upload">
+      <button id="submit">Przetwórz obraz</button>
+    </div>
+    <textarea id="output" readonly></textarea>
+  </div>
+  <div id="processing-overlay" style="display: none;">
+    <div id="processing-animation">
+      <div aria-label="Orange and tan hamster running in a metal wheel" role="img" class="wheel-and-hamster">
+	<div class="wheel"></div>
+	<div class="hamster">
+		<div class="hamster__body">
+			<div class="hamster__head">
+				<div class="hamster__ear"></div>
+				<div class="hamster__eye"></div>
+				<div class="hamster__nose"></div>
+			</div>
+			<div class="hamster__limb hamster__limb--fr"></div>
+			<div class="hamster__limb hamster__limb--fl"></div>
+			<div class="hamster__limb hamster__limb--br"></div>
+			<div class="hamster__limb hamster__limb--bl"></div>
+			<div class="hamster__tail"></div>
+		</div>
+	</div>
+	<div class="spoke"></div>
+</div>
     </div>
   </div>
-  <footer>
-    <p>&copy; 2024 OCR App. Wszelkie prawa zastrzeżone.</p>
-    <p><a href="privacy.html">Polityka prywatności</a> | <a href="terms.html">Warunki użytkowania</a></p>
-  </footer>
-  <div id="popup" class="popup"></div>
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.1/dist/tesseract.min.js"></script>
-  <script src="script.js">
-    document.addEventListener('DOMContentLoaded', () => {
-  // Wybór języka na podstawie ustawień przeglądarki
-  const userLang = navigator.language || navigator.userLanguage;
-  const langElements = document.querySelectorAll('[data-lang]');
-  
-  function setLanguage(lang) {
-    langElements.forEach(el => {
-      if (el.dataset.lang === lang) {
-        el.style.display = '';
-      } else {
-        el.style.display = 'none';
-      }
-    });
-  }
-  
-  if (userLang.startsWith('pl')) {
-    setLanguage('pl');
-  } else {
-    setLanguage('en');
-  }
-
-  // Obsługa przycisku upload
-  document.getElementById('upload-btn').addEventListener('click', () => {
-    document.getElementById('ocr-upload').click();
-  });
-
-  // Obsługa wyboru pliku
-  document.getElementById('ocr-upload').addEventListener('change', handleFileSelect);
-  
-  // Obsługa drag and drop
-  const dropArea = document.getElementById('drop-area');
-  
-  dropArea.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    dropArea.classList.add('drag-over');
-  });
-
-  dropArea.addEventListener('dragleave', () => {
-    dropArea.classList.remove('drag-over');
-  });
-
-  dropArea.addEventListener('drop', (e) => {
-    e.preventDefault();
-    dropArea.classList.remove('drag-over');
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      readFile(files[0]);
-    }
-  });
-
-  function handleFileSelect(event) {
-    const file = event.target.files[0];
-    if (file) {
-      readFile(file);
-    }
-  }
-
-  function readFile(file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      processImage(e.target.result);
-    };
-    reader.readAsDataURL(file);
-  }
-
-  function processImage(image) {
-    const progressBar = document.getElementById('progress-bar');
-    const lang = document.getElementById('ocr-lang').value;
-    progressBar.style.width = '0%';
-    Tesseract.recognize(
-      image,
-      lang,
-      {
-        logger: (m) => {
-          if (m.status === 'recognizing text') {
-            const progress = Math.round(m.progress * 100);
-            progressBar.style.width = `${progress}%`;
-          }
-        },
-      }
-    ).then(({ data: { text } }) => {
-      document.getElementById('ocr-text').value = text;
-      progressBar.style.width = '100%';
-      showPopup('Konwersja zakończona pomyślnie', 'success');
-    }).catch((error) => {
-      showPopup('Wystąpił błąd podczas przetwarzania obrazu', 'error');
-      console.error(error);
-    });
-  }
-
-  document.getElementById('ocr-reset').addEventListener('click', () => {
-    document.getElementById('ocr-text').value = '';
-    document.getElementById('progress-bar').style.width = '0%';
-    showPopup('Pole zostało zresetowane', 'success');
-  });
-
-  document.getElementById('ocr-copy').addEventListener('click', () => {
-    const text = document.getElementById('ocr-text').value;
-    navigator.clipboard.writeText(text).then(() => {
-      showPopup('Tekst skopiowany do schowka', 'success');
-    }).catch(() => {
-      showPopup('Nie udało się skopiować tekstu', 'error');
-    });
-  });
-
-  function showPopup(message, type) {
-    const popup = document.getElementById('popup');
-    popup.textContent = message;
-    popup.className = `popup show ${type}`;
-    setTimeout(() => {
-      popup.classList.remove('show');
-    }, 3000);
-  }
-});
-
-  </script>
 </body>
 </html>
